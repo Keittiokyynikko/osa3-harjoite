@@ -1,6 +1,9 @@
 const express = require('express')
 const app = express()
 
+const cors = require('cors')
+app.use(cors())
+
 app.use(express.json())
 
 let notes = [
@@ -37,21 +40,21 @@ app.post('/api/notes', (request, response) => {
   const note = request.body
 
   if(!body.content) {
-    return.response.status(400).json({
+    return response.status(400).json({
       error: 'content missing'
     })
   }
 
-  const note = {
+  const newNote = {
     content: body.content,
     important: body.important || false,
     date: new Date(),
     id: generateId()
   }
   
-  notes = notes.concat(note)
+  notes = notes.concat(newNote)
 
-  response.json(note)
+  response.json(newNote)
 })
 
 app.get('/', (req, res) => {
@@ -80,7 +83,7 @@ app.delete('/api/notes/:id', (request, response) => {
   response.status(204).end()
 })
 
-const PORT = 3001
+const PORT = process.enc.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
